@@ -25,7 +25,6 @@ def predict():
     data = req.get('url')
     
     #TODO: Combine preprocessing and postprocessing and move function to lib-ml
-    
     processed = preprocess(np.array([data]), model=model, tokenizer=tokenizer, encoder=encoder)
 
     prediction = model.predict(processed)[0]
@@ -43,10 +42,7 @@ def predict():
     print(res)
     return jsonify(res)
 
-
-
-
-#Move this to lib-ml?
+#TODO: either download from public link or mount files
 def load() -> tuple[Model, Tokenizer, LabelEncoder]:
     model = tf.keras.models.load_model('trained_model.keras')
     with open('tokenizer.pkl', 'rb') as f:
@@ -57,9 +53,8 @@ def load() -> tuple[Model, Tokenizer, LabelEncoder]:
 
 #Move this to lib-ml?
 def preprocess(raw_X_test: np.ndarray, model: Model, tokenizer: Tokenizer, encoder: LabelEncoder):
-    X_test = pad_sequences(tokenizer.texts_to_sequences(raw_X_test), maxlen=200)
-    #char_index = tokenizer.word_index
     
+    X_test = pad_sequences(tokenizer.texts_to_sequences(raw_X_test), maxlen=200)
     
     return X_test
 
