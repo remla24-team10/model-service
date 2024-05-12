@@ -28,10 +28,13 @@ def predict():
 
     prediction = model.predict(processed)[0]
     
-    label = encoder.transform(prediction)
+    y_pred_binary = (np.array(prediction) > 0.5).astype(int)
+    
+    label = encoder.inverse_transform([y_pred_binary])
+
     
     res = {
-        "result": label,
+        "result": label.tolist(),
         "probability": prediction.tolist(),
         "url": data 
     }
