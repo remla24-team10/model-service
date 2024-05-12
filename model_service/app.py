@@ -7,6 +7,7 @@ from keras._tf_keras.keras import Model
 from sklearn.preprocessing import LabelEncoder
 from keras._tf_keras.keras.preprocessing.text import Tokenizer
 from keras._tf_keras.keras.preprocessing.sequence import pad_sequences
+import lib_ml_remla as libml
 import tensorflow as tf
 
 app = Flask(__name__)
@@ -24,6 +25,7 @@ def predict():
     data = req.get('url')
     
     #TODO: Combine preprocessing and postprocessing and move function to lib-ml
+    
     processed = preprocess(np.array([data]), model=model, tokenizer=tokenizer, encoder=encoder)
 
     prediction = model.predict(processed)[0]
@@ -46,14 +48,11 @@ def predict():
 
 #Move this to lib-ml?
 def load() -> tuple[Model, Tokenizer, LabelEncoder]:
-    
-    model = tf.keras.models.load_model('../trained_model.keras')
-    with open('../tokenizer.pkl', 'rb') as f:
+    model = tf.keras.models.load_model('trained_model.keras')
+    with open('tokenizer.pkl', 'rb') as f:
         tokenizer = pickle.load(f)
-    with open('../encoder.pkl', 'rb') as f:
+    with open('encoder.pkl', 'rb') as f:
         encoder = pickle.load(f)
-    print(model.summary())
-
     return model, tokenizer, encoder
 
 #Move this to lib-ml?
@@ -65,6 +64,6 @@ def preprocess(raw_X_test: np.ndarray, model: Model, tokenizer: Tokenizer, encod
     return X_test
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    model, tokenizer, encoder = load()
+    app.run(debug=True, host='0.0.0.0', port=8080)
     
-model, tokenizer, encoder = load()

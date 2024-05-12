@@ -7,7 +7,6 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "~3.11"
-tensorflow-io-gcs-filesystem ="0.31.0"
 keras = "3.3.3"
 matplotlib = "3.8.4"
 scikit-learn = "1.2.2"
@@ -21,8 +20,15 @@ dvc = "3.50.1"
 dvc-s3 = "3.2.0"
 flask = "3.0.3"
 dvc-gdrive = "3.0.1"
-tensorflow = "^2.16.1"
-tensorflow-intel = "2.16.1"
+tensorflow-io-gcs-filesystem = [
+    {platform = "darwin", version = "~0.36.0"},
+    {platform = "linux", version = "~0.31.0"},
+    {platform = "win32", version = "~0.31.0"},
+]
+tensorflow = {version = "~2.16.1" }
+tensorflow-intel = { version = "~2.16.1", platform = "win32" }
+lib-ml-remla10-2024 = "^0.0.2"
+
 
 
 [build-system]
