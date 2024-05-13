@@ -1522,6 +1522,21 @@ testing = ["covdefaults (>=2.3)", "coverage (>=7.3.2)", "diff-cover (>=8.0.1)", 
 typing = ["typing-extensions (>=4.8)"]
 
 [[package]]
+name = "flasgger"
+version = "0.5.4"
+description = "Extract swagger specs from your flask project"
+optional = false
+python-versions = "*"
+files = [
+    {file = "flasgger-0.5.4.tar.gz", hash = "sha256:6b39e5ecd7de2ee16032cc9bfc5086d47018146227b1f83aaa80006df6491596"},
+]
+
+[package.dependencies]
+Flask = ">=0.10"
+jsonschema = ">=2.5.1"
+PyYAML = ">=3.0"
+
+[[package]]
 name = "flask"
 version = "3.0.3"
 description = "A simple framework for building complex web applications."
@@ -5948,4 +5963,4 @@ test = ["zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = "~3.11"
-content-hash = "8b5917a4418218ae2b22a5f43b9c01e72d30b16581132a45a6884734ee2c49db"
+content-hash = "58a0e0dfd4594c3660a0ffd77a65b96c8278f70e04fdb63ce222b05b2fd5fdf3"

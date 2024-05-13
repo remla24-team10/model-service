@@ -1,26 +1,63 @@
 from flask import Flask, request, jsonify
 
-import numpy as np
 import pickle
-import os
+import numpy as np
+import tensorflow as tf
 from keras._tf_keras.keras import Model
-from sklearn.preprocessing import LabelEncoder
 from keras._tf_keras.keras.preprocessing.text import Tokenizer
 from keras._tf_keras.keras.preprocessing.sequence import pad_sequences
-import lib_ml_remla as libml
-import tensorflow as tf
+from sklearn.preprocessing import LabelEncoder
+from flasgger import Swagger
+#import lib_ml_remla as libml
+
 
 app = Flask(__name__)
+swagger = Swagger(app)
 
 
-#TODO: swagger documentation
-@app.route('/')
-def test():
-    return 'Hello, World!'
-
+# @app.route('/')
+# def test():
+#     return 'Hello, World!'
 
 @app.route('/predict', methods=['POST'])
 def predict():
+    """
+    Predicts the label and probability for a given URL.
+
+    ---
+    parameters:
+      - in: body
+        name: request_body
+        description: JSON object containing the URL
+        required: true
+        schema:
+          type: object
+          properties:
+            url:
+              type: string
+              description: URL for prediction
+    responses:
+      200:
+        description: Successful prediction
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                result:
+                  type: string
+                  description: Predicted label
+                probability:
+                  type: array
+                  items:
+                    type: number
+                  description: Predicted probabilities for each class
+                url:
+                  type: string
+                  description: Input URL
+      400:
+        description: Bad request, invalid input format
+    """
     req = request.get_json()
     data = req.get('url')
     
@@ -33,7 +70,6 @@ def predict():
     
     label = encoder.inverse_transform([y_pred_binary])
 
-    
     res = {
         "result": label.tolist(),
         "probability": prediction.tolist(),
@@ -51,7 +87,7 @@ def load() -> tuple[Model, Tokenizer, LabelEncoder]:
         encoder = pickle.load(f)
     return model, tokenizer, encoder
 
-#Move this to lib-ml?
+#TODO: Move this to lib-ml
 def preprocess(raw_X_test: np.ndarray, model: Model, tokenizer: Tokenizer, encoder: LabelEncoder):
     
     X_test = pad_sequences(tokenizer.texts_to_sequences(raw_X_test), maxlen=200)
