@@ -27,8 +27,10 @@ tensorflow-io-gcs-filesystem = [
 ]
 tensorflow = {version = "~2.16.1" }
 tensorflow-intel = { version = "~2.16.1", platform = "win32" }
-lib-ml-remla10-2024 = "^0.0.2"
+lib-ml-remla10-2024 = "^1.0.0"
 flasgger = "0.5.4"
+gdown = "5.2.0"
+joblib = "1.4.2"
 
 
 

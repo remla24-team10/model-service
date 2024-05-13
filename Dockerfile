@@ -4,7 +4,7 @@ FROM python:3.11-slim
 WORKDIR /model-service
 
 # Copy the files into the container
-COPY poetry.lock pyproject.toml encoder.pkl tokenizer.pkl trained_model.keras /model_service/app.py /model-service/
+COPY poetry.lock pyproject.toml /model_service/app.py /model-service/
 
 # Install Poetry and dependencies
 RUN pip install poetry \

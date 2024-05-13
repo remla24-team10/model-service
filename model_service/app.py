@@ -1,14 +1,16 @@
-from flask import Flask, request, jsonify
 
+import gdown
 import pickle
 import numpy as np
 import tensorflow as tf
 from keras._tf_keras.keras import Model
 from keras._tf_keras.keras.preprocessing.text import Tokenizer
-from keras._tf_keras.keras.preprocessing.sequence import pad_sequences
 from sklearn.preprocessing import LabelEncoder
 from flasgger import Swagger
-#import lib_ml_remla as libml
+from flask import Flask, request, jsonify
+from lib_ml_remla.preprocess import prepare
+from lib_ml_remla.utils import predict_classes
+
 
 
 app = Flask(__name__)
@@ -61,18 +63,13 @@ def predict():
     req = request.get_json()
     data = req.get('url')
     
-    #TODO: Combine preprocessing and postprocessing and move function to lib-ml
-    processed = preprocess(np.array([data]), model=model, tokenizer=tokenizer, encoder=encoder)
+    processed = prepare(np.array([data]), tokenizer=tokenizer)
 
-    prediction = model.predict(processed)[0]
+    labels, probabilities = predict_classes(model=model, encoder=encoder, X_test=processed, threshold=0.5)
     
-    y_pred_binary = (np.array(prediction) > 0.5).astype(int)
-    
-    label = encoder.inverse_transform([y_pred_binary])
-
     res = {
-        "result": label.tolist(),
-        "probability": prediction.tolist(),
+        "result": labels[0].tolist(),
+        "probability": probabilities[0].tolist(),
         "url": data 
     }
     print(res)
@@ -80,19 +77,17 @@ def predict():
 
 #TODO: either download from public link or mount files
 def load() -> tuple[Model, Tokenizer, LabelEncoder]:
+    gdown.download(id="11Pe3YHO95oPBvzznHwlzkemw1un_wTMX", output='trained_model.keras', quiet=False)
+    gdown.download(id="1IKIE_OV90T82VILOUaq3uWJIBJoQ8xCI", output='tokenizer.pkl', quiet=False)
+    gdown.download(id="1iL1FYHyhKeES59pQVJbK_CzVk5im2lpj", output='encoder.pkl', quiet=False)
     model = tf.keras.models.load_model('trained_model.keras')
     with open('tokenizer.pkl', 'rb') as f:
         tokenizer = pickle.load(f)
     with open('encoder.pkl', 'rb') as f:
         encoder = pickle.load(f)
+          
     return model, tokenizer, encoder
 
-#TODO: Move this to lib-ml
-def preprocess(raw_X_test: np.ndarray, model: Model, tokenizer: Tokenizer, encoder: LabelEncoder):
-    
-    X_test = pad_sequences(tokenizer.texts_to_sequences(raw_X_test), maxlen=200)
-    
-    return X_test
 
 if __name__ == '__main__':
     model, tokenizer, encoder = load()
