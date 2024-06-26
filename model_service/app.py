@@ -77,7 +77,7 @@ def predict():
 
 #TODO: either download from public link or mount files
 def load() -> tuple[Model, Tokenizer, LabelEncoder]:
-    gdown.download(id="11Pe3YHO95oPBvzznHwlzkemw1un_wTMX", output='trained_model.keras', quiet=False)
+    gdown.download(id="1Ob0dzKS5mu_t8zMvgiyGfv5mSXVYzNE-", output='trained_model.keras', quiet=False)
     gdown.download(id="1IKIE_OV90T82VILOUaq3uWJIBJoQ8xCI", output='tokenizer.pkl', quiet=False)
     gdown.download(id="1iL1FYHyhKeES59pQVJbK_CzVk5im2lpj", output='encoder.pkl', quiet=False)
     model = tf.keras.models.load_model('trained_model.keras')
